@@ -21,7 +21,15 @@ int cl_system::exec_app()
 		}
 		else if ((int)current_command.find("Passenger condition") != -1)	// вывести состояние пассажира
 		{
-			command = command.substr(21);
+			string fio = "/" + current_command.substr(21);	// удаление "passenger condition"
+
+
+			// надо найти указатель на объект пассажира посмотреть его головной объект
+			// может ввести состояние пассажира? (на лифте или на этаже)
+			// --------------------------------------------------------
+			// тут закончил...
+			cl_base* p_passenger = get_object_pointer(fio);
+			
 		}
 		else if ((int)current_command.find("Passenger") != -1)				// команда вызова лифта
 		{			
@@ -33,11 +41,15 @@ int cl_system::exec_app()
 
 			ss >> i_initial_floor >> i_destination_floor >> f >> io;		// разбиение строки на данные
 
-			string floor = "/floor_" + to_string(i_initial_floor);
+			string floor = "/floor_" + to_string(i_initial_floor);			// формирование пути к объекту этажа
 
-			cl_base* pass_obj = new cl_passenger(get_object_pointer(floor));
-			pass_obj->set_name(f + " " + io);
-			pass_obj->set_state(1);
+			cl_base* p_floor = get_object_pointer(floor);			// указатель на объект этажа, на котором стоит пассажир
+			cl_base* pass_obj = new cl_passenger(p_floor);			// создание объекта пассажира с головным этажем
+			pass_obj->set_name(f + " " + io);						// переименование пасажира 
+			pass_obj->set_state(1);									// включение объекта пассажира
+
+			// теперь мы имеем человека на этаже, который вызвал лифт с целевым этажем, надо бы
+			// как-то запустить что-то, чтобы лифт поехал туда.. отправить сигнал на cl_manage, чтобы был ясен путь
 			 
 		}
 		else if ((int)current_command.find("Elevator condition") != -1)		// вывести состояние в кабине лифта

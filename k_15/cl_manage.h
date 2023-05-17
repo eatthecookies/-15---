@@ -5,7 +5,7 @@
 
 class cl_manage : public cl_base
 {
-	int i_current_floor;			// номер этажа, на котором находится лифт
+	int i_current_floor = 1;		// номер этажа, на котором находится лифт
 	string s_current_direction;		// направление движения лифта
 
 public:

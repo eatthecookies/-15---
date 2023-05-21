@@ -9,6 +9,7 @@ class cl_passenger : public cl_base
 {
 	int i_initial_floor;  		// номер исходного этажа
 	int i_destination_floor; 	// номер целевого этажа
+	// за состояние отвечает i_state, если 1 - то на этаже, если 2 - то в лифте
 
 	int i_pushed_button;
 	int i_tact;

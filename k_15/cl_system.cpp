@@ -21,15 +21,26 @@ int cl_system::exec_app()
 		}
 		else if ((int)current_command.find("Passenger condition") != -1)	// вывести состояние пассажира
 		{
-			string fio = "/" + current_command.substr(21);	// удаление "passenger condition"
+			string fio = current_command.substr(21);	// удаление "passenger condition"
+
+			string path = "/" + fio;	// удаление "passenger condition"
 
 
-			// надо найти указатель на объект пассажира посмотреть его головной объект
-			// может ввести состояние пассажира? (на лифте или на этаже)
-			// --------------------------------------------------------
-			// тут закончил...
-			cl_base* p_passenger = get_object_pointer(fio);
-			
+			cl_base* p_passenger = get_object_pointer(path);
+			if (p_passenger == nullptr)
+			{
+				cout << "\nPassenger " << fio << " not found";
+			}
+			else if (p_passenger->get_state() == 1)
+			{
+				int floor = 0;
+				cout << "\nPassenger condition: " << fio << " on the floor " << floor;
+			}
+			else if (p_passenger->get_state() == 2)
+			{
+				cout << "\nPassenger condition: " << fio << " in the elevator";
+			}
+
 		}
 		else if ((int)current_command.find("Passenger") != -1)				// команда вызова лифта
 		{			
@@ -82,10 +93,12 @@ void cl_system::build_tree_objects()
 
 	this->set_name("systemObject");				// установление именя systemObject для корневого объекта
 
+	// ---------- Создание объектов -----------------------------------------
 	cl_base* ob_input = new cl_input(this);		// создание объекта ввода
 	cl_base* ob_manage = new cl_manage(this);	// создание объекта управления кабиной
 	cl_base* ob_cabin = new cl_cab(ob_manage);	// создание объекта кабины лифта
 	cl_base* ob_output = new cl_output(this);	// создание объекта вывода
+	// ----------------------------------------------------------------------
 
 	set_all_state_on();							// включение всех объектов
 
@@ -115,7 +128,8 @@ void cl_system::build_tree_objects()
 		obj->set_state(1);
 		// Установка связей сигналов и обработчиков с новым объектом ???
 	}
-		
+	
+	// -----------------------------Установка соединений --------------------------
 	//1.3.Установка связей сигналов и обработчиков между объектами
 	
 

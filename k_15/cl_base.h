@@ -58,6 +58,8 @@ public:
 	int get_object_class();																		 // получение номера класса объекта
 	void set_object_class(int n);																 // задание значения готовности объекта
 	void set_all_state_on();																	 // включение вcех объектов
+	int get_state();
+	void delete_links(cl_base* p_target);
 };
 
 

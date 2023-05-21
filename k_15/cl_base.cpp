@@ -12,8 +12,28 @@ cl_base::cl_base(cl_base* p_head_object, string s_name)
 
 cl_base::~cl_base()
 {
+	//get_root()-> delete_links(this);
 	for (int i = 0; i < p_sub_objects.size(); i++) 		// поочередное удаление подчиненных объектов
 		delete p_sub_objects[i];
+}
+
+// добавлено на факультативе 
+void cl_base::delete_links(cl_base*p_target)
+{
+	//Метод удаляет связи, идущие к объекту p_target, из всех друших элементов дерева
+	for (int i = 0; i < this->connections.size(); i++)
+	{
+		if (this->connections[i]->p_target == p_target)
+		{
+			delete this->connections[i];
+			this->connections.erase(connections.begin() + i);
+		}
+	}
+
+	for (auto p_sub : p_sub_objects)
+	{
+		p_sub->delete_links(p_target);
+	}
 }
 
 string cl_base::get_name()
@@ -169,7 +189,7 @@ void cl_base::delete_sub_object(string name) 		// метод удаления подчиненного об
 {
 	int i = 0;
 	while (p_sub_objects[i]->s_name != name) i++;
-	p_sub_objects.erase(p_sub_objects.begin() + i);	// удаление из списка указателей на подчиненные объекты у текущего указателя на удаляемый объект
+		p_sub_objects.erase(p_sub_objects.begin() + i);	// удаление из списка указателей на подчиненные объекты у текущего указателя на удаляемый объект
 
 }
 
@@ -292,8 +312,10 @@ void cl_base::delete_connection(TYPE_SIGNAL p_signal, cl_base* p_target, TYPE_HA
 		if (connections[i]->p_signal == p_signal &&
 			connections[i]->p_target == p_target &&
 			connections[i]->p_handler == p_handler)
-			connections.erase(connections.begin() + i);		// удалеение i-того элемента
-
+		{
+			delete connections[i];						// удаление объекта структуры из памяти
+			connections.erase(connections.begin() + i); // удалеение i-того элемента в ВЕКТОРЕ
+		}
 }
 
 
@@ -308,7 +330,7 @@ void cl_base::emit_signal(TYPE_SIGNAL p_signal, string& s_command)
 
 	for (int i = 0; i < connections.size(); i++) 		// цикл по всем обработчикам
 	{
-		if (connections[i]->p_signal == p_signal)  	// определение допустимого обработчика
+		if (connections[i]->p_signal == p_signal)  		// определение допустимого обработчика
 		{
 			p_handler = connections[i]->p_handler;
 			p_object = connections[i]->p_target;
@@ -338,4 +360,9 @@ void cl_base::set_all_state_on()
 		p_sub_object->i_state = 1;				// установка состояния
 		p_sub_object->set_all_state_on();		// рекурсивный вызов
 	}
+}
+
+int cl_base::get_state()
+{
+	return i_state;
 }

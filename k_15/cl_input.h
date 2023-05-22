@@ -6,12 +6,11 @@
 class cl_input : public cl_base
 {
 public:
-	cl_input(cl_base* p_head_object, string s_name = "inputObject"); // параметризованный конструктор класса cl_2
+	cl_input(cl_base* p_head_object, string s_name = "input"); // параметризованный конструктор класса cl_2
 
-	void signal_meth(string& s_message); 			// метод подачи сигнала
-	void read_start_options(string s_message);
+	void signal(string& s_message); 			// метод подачи сигнала
 	void read_command(string s_message);
-	void handler_meth(string s_message); 			// метод обработчика
+	void elevator_has_been_called(string s_message); 			// метод обработчика
 
 };
 

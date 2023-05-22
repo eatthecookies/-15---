@@ -9,13 +9,15 @@ void cl_cab::signal_meth(string& s_message)
 {
 }
 
-void cl_cab::handler_meth(string s_message)
+void cl_cab::elevator_has_been_called(string s_message)
 {	
-	if ((int)s_message.find("capacity:") != -1)
-	{
-		s_message = s_message.substr(10);
-		i_capacity = stoi(s_message);
-		//cout << i_capacity;
-	}
+
 
 }
+
+
+void cl_cab::change_capacity(string s_message)
+{
+	i_capacity = stoi(s_message);
+}
+

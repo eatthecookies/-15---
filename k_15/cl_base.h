@@ -10,7 +10,7 @@ using namespace std;
 class cl_base;
 
 #define SIGNAL_D(signal_meth) (TYPE_SIGNAL)(&signal_meth) 		// макроопределение для приведения указателя на метод сигнала 
-#define HANDLER_D(handler_meth) (TYPE_HANDLER)(&handler_meth)	// макроопределение для приведения указателя на метод обработчика
+#define HANDLER_D(elevator_has_been_called) (TYPE_HANDLER)(&elevator_has_been_called)	// макроопределение для приведения указателя на метод обработчика
 
 typedef void (cl_base::* TYPE_SIGNAL) (string& s_message);
 typedef void (cl_base::* TYPE_HANDLER) (string s_message);
@@ -32,7 +32,7 @@ class cl_base
 	int object_class;						// номер класса
 public:
 	cl_base(cl_base* p_head_object, string s_name = "Base_object"); 	// конструктор класса cl_base
-	~cl_base();															// деструктор класса cl_base															// деструктор
+	~cl_base();															// деструктор класса cl_base		
 	bool set_name(string s_new_name); 								   	// метод задания нового имени для объекта
 	string get_name();													// метод получения имени объекта
 	cl_base* get_head();												// метод получения указателя на головной объект	
@@ -60,6 +60,8 @@ public:
 	void set_all_state_on();																	 // включение вcех объектов
 	int get_state();
 	void delete_links(cl_base* p_target);
+
+	vector <cl_base*> get_sub_objects();
 };
 
 

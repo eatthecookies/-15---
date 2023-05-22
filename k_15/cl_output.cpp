@@ -10,6 +10,6 @@ void cl_output::signal_meth(string& s_message)
 	
 }
 
-void cl_output::handler_meth(string s_message)
+void cl_output::elevator_has_been_called(string s_message)
 {
 }

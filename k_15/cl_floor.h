@@ -7,10 +7,12 @@
 class cl_floor : public cl_base
 {
 public:
-	cl_floor(cl_base* p_head_object, string s_name = "floorObject"); // параметризованный конструктор класса cl_2
+	cl_floor(cl_base* p_head_object, string s_name = "floor"); // параметризованный конструктор класса cl_2
 
 	void signal_meth(string& s_message); 			// метод подачи сигнала
-	void handler_meth(string s_message); 			// метод обработчика
+	void button_has_pushed(string s_message);
+	void signal_to_call_elevator(string& s_message);
+	void elevator_has_been_called(string s_message); 			// метод обработчика
 };
 
 #endif

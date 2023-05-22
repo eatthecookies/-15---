@@ -36,6 +36,11 @@ void cl_base::delete_links(cl_base*p_target)
 	}
 }
 
+vector<cl_base*> cl_base::get_sub_objects()
+{
+	return p_sub_objects;
+}
+
 string cl_base::get_name()
 {
 	return s_name;										// возврат свойства s_name текущего объекта

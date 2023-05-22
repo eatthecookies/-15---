@@ -12,13 +12,17 @@
 class cl_system : public cl_base
 {
 	string current_command;				// текущая команда
+	int num_floors;
 public:
 	cl_system(cl_base* p_head_object);  // конструктор
 	int exec_app();						// метод запуска основного алгоритма приложения  		
 	void build_tree_objects();			// метод построения дерева объектов 
 
-	void signal_meth(string& s_message); 			// метод подачи сигнала
-	void handler_meth(string s_message); 			// метод обработчика
+	void signal_to_read_command(string& s_message); 			// метод подачи сигнала
+	void signal_to_сhange_cab_capacity(string& s_message);
+	void signal_to_push_the_button_in_cab(string& s_message);
+	void handler(string s_message); 			// метод обработчика
+	void signal_to_push_button_on_the_floor(string& s_message);
 };
 
 

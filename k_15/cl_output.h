@@ -8,10 +8,10 @@
 class cl_output : public cl_base
 {
 public:
-	cl_output(cl_base* p_head_object, string s_name = "outputObject"); // параметризованный конструктор класса cl_2
+	cl_output(cl_base* p_head_object, string s_name = "output"); // параметризованный конструктор класса cl_2
 
 	void signal_meth(string& s_message); 			// метод подачи сигнала
-	void handler_meth(string s_message); 			// метод обработчика
+	void elevator_has_been_called(string s_message); 			// метод обработчика
 };
 
 #endif

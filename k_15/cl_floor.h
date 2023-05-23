@@ -10,9 +10,9 @@ public:
 	cl_floor(cl_base* p_head_object, string s_name = "floor"); // параметризованный конструктор класса cl_2
 
 	void signal_meth(string& s_message); 			// метод подачи сигнала
-	void button_has_pushed(string s_message);
+	void button_has_pushed_on_the_floor(string s_message);
 	void signal_to_call_elevator(string& s_message);
-	void elevator_has_been_called(string s_message); 			// метод обработчика
+	void button_on_the_floor_has_been_pushed(string s_message); 			// метод обработчика
 };
 
 #endif

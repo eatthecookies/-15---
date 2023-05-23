@@ -10,12 +10,17 @@ int cl_passenger::get_current_floor()
 	return i_current_floor;
 }
 
+int cl_passenger::get_destination_floor()
+{
+	return i_destination_floor;
+}
+
 void cl_passenger::signal_meth(string& s_message)
 {
 	
 }
 
-void cl_passenger::elevator_has_been_called(string s_message)
+void cl_passenger::button_on_the_floor_has_been_pushed(string s_message)
 {
 	
 }

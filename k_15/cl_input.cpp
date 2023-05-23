@@ -18,7 +18,7 @@ void cl_input::read_command(string s_message)
 	emit_signal(SIGNAL_D(cl_input::signal), s_command);	// отправить в обработчик системы
 }
 
-void cl_input::elevator_has_been_called(string s_message)
+void cl_input::button_on_the_floor_has_been_pushed(string s_message)
 {
 	
 		

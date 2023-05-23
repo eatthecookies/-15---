@@ -48,28 +48,36 @@ void cl_system::build_tree_objects()
 		for (int i = 0; i < num_floors; i++)
 		{
 			string name = "floor_" + to_string(i + 1);	// формирование имени для объекта лифта
-			cl_base* obj = new cl_floor(this, name);	// создание объекта лифта
-			obj->set_state(1);							// включение нового объекта
-			
-			//todo Установка связей сигналов и обработчиков с новым объектом 
+			cl_base* p_floor = new cl_floor(this, name);	// создание объекта лифта
+			p_floor->set_state(1);							// включение нового объекта
+
+			//этаж -> менеджер кабины
+			p_floor->set_connection(SIGNAL_D(cl_floor::signal_to_call_elevator), ob_manage, HANDLER_D(cl_manage::button_on_the_floor_has_been_pushed));
 		}
 	}
-
+	
 	//! ========================= Установка соединений ===================================
 	//todo Установка связей сигналов и обработчиков между объектами
+	
+	// менеджер кабины -> загрузить пассажиров
+	ob_manage->set_connection(SIGNAL_D(cl_manage::signal_to_load_passengers), this, HANDLER_D(cl_system::load_passengers));
+	
+	// менеджер кабины -> выгрузить пассажиров
+	ob_manage->set_connection(SIGNAL_D(cl_manage::signal_to_unload_passengers), this, HANDLER_D(cl_system::unload_passengers));
+	
+	// установить связь кабина -> управление  для нажатий кнопок
+	ob_cabin ->set_connection(SIGNAL_D(cl_cab::signal_to_push_the_button_in_cab), ob_manage, HANDLER_D(cl_manage::button_in_the_cab_has_been_pushed));
+	
 	cout << "Ready to work";
 }
 
 int cl_system::exec_app()
 {
-	int i_tact = 0;
+	int i_tact = 1;
 
 	//! ======================== Цикл для обработки вводимых команд =======================
 	while (true)
 	{
-		//todo Определение номера очередного такта
-		i_tact++;
-
 		// выдача сигнала объекту ввода для чтения
 		string command = "";
 		emit_signal(SIGNAL_D(cl_system::signal_to_read_command), command);	
@@ -126,35 +134,29 @@ int cl_system::exec_app()
 			pass_obj->set_dest_floor(i_destination_floor);			// установка целевого этажа
 			pass_obj->set_init_floor(i_initial_floor);				// установка начального этажа
 
-
-			//todo нажать кнопку на этаже, потом спустя такты, когда он приехал надо вызвать лифт на нужный этаж
-
-			//? todo установить связь система -> кабина 
-			// todo установить связь кабина -> управление  для нажатий кнопок
-
 			string command = to_string(i_initial_floor) + " " + to_string(pass_obj->get_state()); // формирование сигнала для этажа
 			// на каком этаже сейчас и куда хочет ехать вверх или вниз
-			
-			// todo установить связь система -> этаж
+
 			// нажали на кнопку на этаже
-			emit_signal(SIGNAL_D(cl_system::signal_to_push_button_on_the_floor), command); 
+			p_floor-> emit_signal(SIGNAL_D(cl_floor::signal_to_call_elevator), command);
 
 		}
 		else if ((int)current_command.find("Elevator condition") != -1)		// вывести состояние в кабине лифта
 		{
 			cl_manage* p_manage = (cl_manage*)get_object_pointer("/manage");
+			int direction = p_manage->get_direction();
 			int floor = p_manage->get_current_floor();	// номер текущего этажа лифта
 			int num_pass = p_manage->get_num_passengers();
 
-			if (p_manage->get_state() == 1)		// стоит на этаже 
+			if (direction == 0)		// стоит на этаже 
 			{
 				cout << "\nElevator condition: " << floor << " " << num_pass << " stop";
 			}
-			else if (p_manage->get_state() == 2)	// едет вверх
+			else if (direction == 1)	// едет вверх
 			{
 				cout << "\nElevator condition: " << floor << " " << num_pass << " direction up";
 			}
-			else if (p_manage->get_state() == 3)	// едет вниз
+			else if (direction == -1)	// едет вниз
 			{
 				cout << "\nElevator condition: " << floor << " " << num_pass << " direction down";
 			}
@@ -201,7 +203,12 @@ int cl_system::exec_app()
 					cout << " (" << i << ": " << up << "-" << down << ")";
 			}
 			
-			
+			cout << " (";
+			for (auto p : p_manage->queue)
+			{
+				cout << p << "  ";
+			}
+			cout << ")" << endl;
 
 		}
 		else if (current_command == "SHOWTREE")								// показать дерево иерархии объектов
@@ -209,9 +216,44 @@ int cl_system::exec_app()
 			print_tree_with_rns(0);
 			return 0;
 		}
+
+		int up, down;
+		cl_manage* p_manage = (cl_manage*)get_object_pointer("/manage");
+
+		int floor = p_manage->get_current_floor();						// номер текущего этажа лифта
+		int num_pass = p_manage->get_num_passengers();
+
+		cout << i_tact << ": Elevator: " << floor << " " << num_pass << " Floors:";
+		for (int i = 1; i <= num_floors; i++)
+		{
+			cl_base* p_floor = get_object_pointer("/floor_" + to_string(i));
+
+			up = 0; down = 0;
+			for (auto p_pass : p_floor->get_sub_objects())
+				if (p_pass->get_state() == 1)
+					up++;
+			for (auto p_pass : p_floor->get_sub_objects())
+				if (p_pass->get_state() == 2)
+					down++;
+			if ((up + down) != 0)
+				cout << " (" << i << ": " << up << "-" << down << ")";
+		}
+
+		cout << " (";
+		for (auto p : p_manage->queue)
+		{
+			cout << p << "  ";
+		}
+		cout << ")" ;
+
+
+		i_tact++;
+		
+		// Отработка действий согласно такту
+		//cl_manage* p_manage = (cl_manage*)get_object_pointer("/manage");
+		p_manage->moving();
 	}
 
-	// todo Отработка действий согласно такту.
 	return 0;
 }
 
@@ -235,4 +277,53 @@ void cl_system::handler(string s_message)
 
 void cl_system::signal_to_push_button_on_the_floor(string& s_message)
 {
+}
+
+void cl_system::load_passengers(string s_message)
+{
+	string command;
+	cl_manage* p_manage = (cl_manage*)get_object_pointer("/manage");
+	int curr_floor = p_manage->get_current_floor();
+
+	cl_base* p_floor = get_object_pointer("/floor_" + to_string(curr_floor));
+	cl_cab* p_cab = (cl_cab*) get_object_pointer("/manage/cabin");
+
+	if (p_manage->get_num_passengers() == p_cab->get_capacity())
+		return;
+
+	for (int i = 0; i < p_floor->get_sub_objects().size(); i++)
+	{
+
+		cl_passenger* p_pass = (cl_passenger*)p_floor->get_sub_objects()[i];
+		command = to_string(p_pass->get_destination_floor()) + " " + to_string(p_pass->get_state());
+		
+		p_pass->change_head_object(p_cab);
+		p_manage->increment_num_passengers();
+		
+		// нажать кнопку в лифте
+		p_cab->emit_signal(SIGNAL_D(cl_cab::signal_to_push_the_button_in_cab), command);
+		
+		
+	}
+
+}
+
+void cl_system::unload_passengers(string s_message)
+{
+	cl_manage* p_manage = (cl_manage*)get_object_pointer("/manage");
+	int curr_floor = p_manage->get_current_floor();
+	
+	cl_base* p_floor = get_object_pointer("/floor_" + to_string(curr_floor));
+	cl_base* p_cab = get_object_pointer("/manage/cabin");
+
+	for (int i = 0; i < p_cab->get_sub_objects().size(); i++)
+	{
+		cl_passenger* p_pass = (cl_passenger*) p_cab->get_sub_objects()[i];
+		
+		if (p_pass->get_destination_floor() == curr_floor)
+			p_cab -> delete_sub_object(p_pass->get_name());
+		
+		p_manage->decrement_num_passengers();
+	}
+
 }

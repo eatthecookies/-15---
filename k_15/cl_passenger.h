@@ -22,12 +22,12 @@ public:
 	cl_passenger(cl_base* p_head_object, string s_name = "passenger"); // параметризованный конструктор класса cl_2
 
 	int get_current_floor();
-
+	int get_destination_floor();
 	void set_dest_floor(int);
 	void set_init_floor(int);
 
 	void signal_meth(string& s_message); 			// метод подачи сигнала
-	void elevator_has_been_called(string s_message); 			// метод обработчика
+	void button_on_the_floor_has_been_pushed(string s_message); 			// метод обработчика
 };
 
 #endif

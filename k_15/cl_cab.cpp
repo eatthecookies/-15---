@@ -9,12 +9,15 @@ void cl_cab::signal_meth(string& s_message)
 {
 }
 
-void cl_cab::elevator_has_been_called(string s_message)
-{	
-
-
+int cl_cab::get_capacity()
+{
+	return i_capacity;
 }
 
+void cl_cab::signal_to_push_the_button_in_cab(string& s_message)
+{
+
+}
 
 void cl_cab::change_capacity(string s_message)
 {

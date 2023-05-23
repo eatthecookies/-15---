@@ -183,7 +183,12 @@ bool cl_base::change_head_object(cl_base* p_new_head_object)
 		p_root_object = p_root_object->get_head();
 	}
 
-	p_head_object->delete_sub_object(this->s_name);
+	
+
+	int i = 0;
+	while (p_head_object->p_sub_objects[i]->s_name != this->s_name) i++;
+	p_head_object->p_sub_objects.erase(p_head_object->p_sub_objects.begin() + i);
+
 
 	this->p_head_object = p_new_head_object;
 	p_new_head_object->p_sub_objects.push_back(this); // добавление текущего объекта в список указателей на подчиненные объекты нового головного объекта
@@ -194,8 +199,10 @@ void cl_base::delete_sub_object(string name) 		// метод удаления подчиненного об
 {
 	int i = 0;
 	while (p_sub_objects[i]->s_name != name) i++;
-		p_sub_objects.erase(p_sub_objects.begin() + i);	// удаление из списка указателей на подчиненные объекты у текущего указателя на удаляемый объект
-
+	
+	delete p_sub_objects[i];
+	p_sub_objects.erase(p_sub_objects.begin() + i);	// удаление из списка указателей на подчиненные объекты у текущего указателя на удаляемый объект
+	
 }
 
 cl_base* cl_base::get_object_pointer(string coordinate)

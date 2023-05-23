@@ -10,7 +10,7 @@ using namespace std;
 class cl_base;
 
 #define SIGNAL_D(signal_meth) (TYPE_SIGNAL)(&signal_meth) 		// макроопределение для приведения указателя на метод сигнала 
-#define HANDLER_D(elevator_has_been_called) (TYPE_HANDLER)(&elevator_has_been_called)	// макроопределение для приведения указателя на метод обработчика
+#define HANDLER_D(button_on_the_floor_has_been_pushed) (TYPE_HANDLER)(&button_on_the_floor_has_been_pushed)	// макроопределение для приведения указателя на метод обработчика
 
 typedef void (cl_base::* TYPE_SIGNAL) (string& s_message);
 typedef void (cl_base::* TYPE_HANDLER) (string s_message);

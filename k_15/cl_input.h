@@ -10,7 +10,7 @@ public:
 
 	void signal(string& s_message); 			// метод подачи сигнала
 	void read_command(string s_message);
-	void elevator_has_been_called(string s_message); 			// метод обработчика
+	void button_on_the_floor_has_been_pushed(string s_message); 			// метод обработчика
 
 };
 

@@ -10,6 +10,6 @@ void cl_output::signal_meth(string& s_message)
 	
 }
 
-void cl_output::elevator_has_been_called(string s_message)
+void cl_output::button_on_the_floor_has_been_pushed(string s_message)
 {
 }

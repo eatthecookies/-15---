@@ -23,6 +23,8 @@ public:
 	void signal_to_push_the_button_in_cab(string& s_message);
 	void handler(string s_message); 			// метод обработчика
 	void signal_to_push_button_on_the_floor(string& s_message);
+	void load_passengers(string s_message);
+	void unload_passengers(string s_message);
 };
 
 

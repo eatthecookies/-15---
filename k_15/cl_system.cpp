@@ -1,5 +1,11 @@
 #include "cl_system.h"
 
+
+// сделать поле указателя для очережи
+// не удалять этаж при приезде на него
+// не добавлять этаж если он уже есть в очереди и если направление сохраняется
+
+
 cl_system::cl_system(cl_base* p_head_object) : cl_base(p_head_object) // конструктор класса cl_1 вызывает конструктор базового класса
 {
 	set_object_class(1);
@@ -38,7 +44,7 @@ void cl_system::build_tree_objects()
 			break;
 
 		stringstream ss(current_command);		// создание потока для переменной команды
-		int capacity;				// составляющие команды
+		int capacity;							// составляющие команды
 		ss >> num_floors >> capacity;			// присвоение данных к переменным
 		command = to_string(capacity);			// изменение вместимости кабины лифта
 

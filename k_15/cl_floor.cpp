@@ -11,12 +11,12 @@ void cl_floor::signal_meth(string& s_message)
 
 void cl_floor::button_has_pushed_on_the_floor(string s_message)
 {
-	int direction, i_init_floor;
+	int curr_direction, i_init_floor;
 	stringstream ss(s_message);
 	
 	cl_base* p_manage = get_object_pointer("/manage");
 
-	ss >> i_init_floor >> direction;
+	ss >> i_init_floor >> curr_direction;
 	string command;
 
 

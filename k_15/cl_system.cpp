@@ -133,9 +133,9 @@ int cl_system::exec_app()
 			pass_obj->set_name(f + " " + io);						// переименование пасажира 
 			
 			if (i_initial_floor < i_destination_floor)			// включение объекта пассажира 1, давая понять, что он на этаже
-				pass_obj->set_state(2);									
+				pass_obj->set_state(1);									
 			else
-				pass_obj->set_state(1);
+				pass_obj->set_state(2);
 
 			pass_obj->set_dest_floor(i_destination_floor);			// установка целевого этажа
 			pass_obj->set_init_floor(i_initial_floor);				// установка начального этажа
@@ -150,19 +150,19 @@ int cl_system::exec_app()
 		else if ((int)current_command.find("Elevator condition") != -1)		// вывести состояние в кабине лифта
 		{
 			cl_manage* p_manage = (cl_manage*)get_object_pointer("/manage");
-			int direction = p_manage->get_direction();
+			int curr_direction = p_manage->get_direction();
 			int floor = p_manage->get_current_floor();	// номер текущего этажа лифта
 			int num_pass = p_manage->get_num_passengers();
 
-			if (direction == 0)		// стоит на этаже 
+			if (curr_direction == 0)		// стоит на этаже 
 			{
 				cout << "\nElevator condition: " << floor << " " << num_pass << " stop";
 			}
-			else if (direction == 1)	// едет вверх
+			else if (curr_direction == 1)	// едет вверх
 			{
 				cout << "\nElevator condition: " << floor << " " << num_pass << " direction up";
 			}
-			else if (direction == -1)	// едет вниз
+			else if (curr_direction == -1)	// едет вниз
 			{
 				cout << "\nElevator condition: " << floor << " " << num_pass << " direction down";
 			}
@@ -210,7 +210,7 @@ int cl_system::exec_app()
 			}
 			
 			cout << " (";
-			for (auto p : p_manage->queue)
+			for (auto p : p_manage->queue1)
 			{
 				cout << p << "  ";
 			}
@@ -248,7 +248,7 @@ int cl_system::exec_app()
 		cout << " (";
 		for (auto p : p_manage->queue)
 		{
-			cout << p << "  ";
+			cout << p.floor << "  ";
 		}
 		cout << ")" ;
 
@@ -327,9 +327,10 @@ void cl_system::unload_passengers(string s_message)
 		cl_passenger* p_pass = (cl_passenger*) p_cab->get_sub_objects()[i];
 		
 		if (p_pass->get_destination_floor() == curr_floor)
-			p_cab -> delete_sub_object(p_pass->get_name());
-		
-		p_manage->decrement_num_passengers();
+		{
+			p_cab->delete_sub_object(p_pass->get_name());
+			p_manage->decrement_num_passengers();
+		}
 	}
 
 }

@@ -12,7 +12,7 @@ void cl_manage::signal_meth(string& s_message)
 
 void cl_manage::button_in_the_cab_has_been_pushed(string s_message)
 {
-	//todo вот эта часть надо переписать
+	
 	int i_dest_floor;
 	int pass_direction;
 	stringstream ss(s_message);
@@ -20,31 +20,85 @@ void cl_manage::button_in_the_cab_has_been_pushed(string s_message)
 	// 1 - верх 
 	// 2 - вниз
 	if (pass_direction == 2) pass_direction = -1;
-	
-	if (last_added_ind.empty()) cout << "i am empty((" << endl;
 
-	for (int i = last_added_ind[0]; i < queue.size() - 1; i++)
+	//for (int i = pointer; i < queue.size() - 1; i++)
+	//{
+	//	if (curr_direction == pass_direction && curr_direction == 1) // едет вверх
+	//	{
+	//		if (queue[i] < i_dest_floor < queue[i + 1])
+	//		{
+	//			queue.insert(queue.begin() + i, i_dest_floor);
+	//			last_added_ind.erase(last_added_ind.begin());
+	//			return;
+	//		}
+	//	}
+	//	else if (curr_direction == pass_direction && curr_direction == -1)
+	//	{
+	//		if (queue[i] > i_dest_floor > queue[i + 1])
+	//		{
+	//			queue.insert(queue.begin() + i, i_dest_floor);
+	//			last_added_ind.erase(last_added_ind.begin());
+	//			return;
+	//		}
+	//	}
+	//}
+	
+	//for (int i = 0; i < queue1.size() - 1; i++)
+	//{
+	//	if (past_direction == pass_direction && past_direction == 1) // едет вверх
+	//	{
+	//		
+	//		if (queue1[i] < i_dest_floor < queue1[i + 1])
+	//		{
+	//			queue1.insert(queue1.begin() + i + 1, i_dest_floor);
+	//			return;
+	//		}
+	//	}
+	//	else if (past_direction == pass_direction && past_direction == -1)
+	//	{
+	//		if (queue1[i] > i_dest_floor > queue1[i + 1])
+	//		{
+	//			queue1.insert(queue1.begin() + i + 1, i_dest_floor);
+	//			return;
+	//		}
+	//	}
+	//}
+	//queue1.push_back(i_dest_floor);
+	Call p;
+
+	for (int i = 0; i < queue.size() - 1; i++)
 	{
-		if (direction == pass_direction && direction == 1) // играет вверх
+		cout << i;
+		/*if (queue[i].direction != queue[i + 1].direction && queue[i + 1].direction != 0 && queue[i].direction != 0)
 		{
-			if (queue[i] < i_dest_floor < queue[i + 1])
+			p.floor = i_dest_floor;
+			queue.insert(queue.begin() + i + 1, p);
+			return;
+		}*/
+		if (past_direction == pass_direction && past_direction == 1) // едет вверх
+		{
+			if (queue[i].floor < i_dest_floor < queue[i + 1].floor )
 			{
-				queue.insert(queue.begin() + i, i_dest_floor);
-				last_added_ind.erase(last_added_ind.begin());
+				p.floor = i_dest_floor;
+				queue.insert(queue.begin() + i + 1, p);
 				return;
 			}
 		}
-		else if (direction == pass_direction && direction == -1)
+		else if (past_direction == pass_direction && past_direction == -1 )
 		{
-			if (queue[i] > i_dest_floor > queue[i + 1])
+			if (queue[i].floor > i_dest_floor > queue[i + 1].floor)
 			{
-				queue.insert(queue.begin() + i, i_dest_floor);
-				last_added_ind.erase(last_added_ind.begin());
+				
+				p.floor = i_dest_floor;
+				queue.insert(queue.begin() + i + 1, p);
 				return;
 			}
 		}
 	}
-	queue.push_back(i_dest_floor);
+
+	p.floor = i_dest_floor;
+	queue.push_back(p);
+
 }
 
 void cl_manage::button_on_the_floor_has_been_pushed(string s_message)
@@ -57,75 +111,155 @@ void cl_manage::button_on_the_floor_has_been_pushed(string s_message)
 	// 2 - вниз
 	if (pass_direction == 2) pass_direction = -1;
 	
+	/*if (queue1.empty())
+	{
+		queue1.push_back(i_init_floor);
+		return;
+	}*/
+	
+
+	Call p;
+	p.direction = pass_direction;
 	if (queue.empty())
 	{
-		queue.push_back(i_init_floor);
-		last_added_ind.insert(last_added_ind.begin(), last_added_ind.size());
+		p.floor = i_init_floor;
+		queue.push_back(p);
 		return;
 	}
+
+
+	//for (int i = pointer; i < queue.size() - 1; i++)
+	//{
+	//	cout << "Зашел в цикл" << endl;
+	//	cout << curr_direction << " " << pass_direction << endl;
+	//	if (curr_direction == pass_direction && curr_direction == 1) // играет вверх
+	//	{
+	//		cout << "Зашел в условие проезда наверх" << endl;
+	//		if (queue[i - 1] < i_init_floor < queue[i])
+	//		{
+	//			queue.insert(queue.begin() + i, i_init_floor);
+	//			last_added_ind.insert(last_added_ind.begin(), i);
+	//			return;
+	//		}
+	//	}
+	//	else if (curr_direction == pass_direction && curr_direction == -1)
+	//	{
+	//		if (queue[i] > i_init_floor > queue[i + 1])
+	//		{
+	//			queue.insert(queue.begin() + i, i_init_floor);
+	//			last_added_ind.insert(last_added_ind.begin(), i);
+	//			return;
+	//		}
+	//	}
+	//}
+
 	
+	//for (int i = 0; i < queue1.size() - 1; i++)
+	//{
+	//	if (curr_direction == pass_direction && curr_direction == 1 && i_init_floor > i_current_floor) // едет вверх
+	//	{
+	//		if (queue1[i] < i_init_floor < queue1[i + 1])
+	//		{
+	//			queue1.insert(queue1.begin() + i, i_init_floor);
+	//			return;
+	//		}
+	//	} 
+	//	else if (curr_direction == pass_direction && curr_direction == -1 && i_init_floor < i_current_floor)
+	//	{
+	//		if (queue1[i] > i_init_floor > queue1[i + 1])
+	//		{
+	//			queue1.insert(queue1.begin() + i, i_init_floor);
+	//			return;
+	//		}
+	//	}
+	//}
+
+	//queue1.push_back(i_init_floor);
+	
+
 	for (int i = 0; i < queue.size() - 1; i++)
 	{
-		cout << i << endl;
-		if (direction == pass_direction && direction == 1) // играет вверх
+		cout << i;
+		if (curr_direction == pass_direction && curr_direction == 1 && i_init_floor > i_current_floor) // едет вверх
 		{
-			if (i == 0 && i_init_floor < queue[i])
+			if (queue[i].floor < i_init_floor < queue[i + 1].floor)
 			{
-				cout << i_init_floor << "<" << queue[i] << endl;
-				queue.insert(queue.begin() + i, i_init_floor);
-				last_added_ind.insert(last_added_ind.begin(), i);
-				return;
-			}
-			if (queue[i] < i_init_floor < queue[i + 1])
-			{
-				queue.insert(queue.begin() + i, i_init_floor);
-				last_added_ind.insert(last_added_ind.begin(), i);
+				
+				p.floor = i_init_floor;
+				queue.insert(queue.begin() + i, p);
 				return;
 			}
 		}
-		else if (direction == pass_direction && direction == -1)
+		else if (curr_direction == pass_direction && curr_direction == -1 && i_init_floor < i_current_floor)
 		{
-			if (i == 0 && i_init_floor > queue[i])
+			if (queue[i].floor > i_init_floor > queue[i + 1].floor)
 			{
-				queue.insert(queue.begin() + i, i_init_floor);
-				last_added_ind.insert(last_added_ind.begin(), i);
-				return;
-			}
-			if (queue[i] > i_init_floor > queue[i + 1])
-			{
-				queue.insert(queue.begin() + i, i_init_floor);
-				last_added_ind.insert(last_added_ind.begin(), i);
+				
+				p.floor = i_init_floor;
+				queue.insert(queue.begin() + i, p);
 				return;
 			}
 		}
 	}
-	queue.push_back(i_init_floor);
-	last_added_ind.insert(last_added_ind.begin(), last_added_ind.size());
-	return;
 	
-	//todo вот эта часть надо переписать
-	//queue.push_back(i_init_floor);
+	p.floor = i_init_floor;
+	queue.push_back(p);
+
+	return;
 }
 
 void cl_manage::moving()
 {
-	if (queue.empty())
+	/*if (queue1.empty())
 	{
-		queue.push_back(1);
+		queue1.push_back(1);
 		moving();
 	}
 	else
 	{
-		if (i_current_floor < queue[0])
-			direction = 1;
-		else
-			direction = -1;
+		if (i_current_floor < queue1[0])
+			curr_direction = 1;
+		else if (i_current_floor > queue1[0])
+			curr_direction = -1;
 
-		if (queue[0] != i_current_floor)
-			i_current_floor += direction;
+		if (queue1[0] != i_current_floor)
+		{
+			i_current_floor += curr_direction;
+		}
+			
 		else
 		{
-			direction = 0;
+			past_direction = curr_direction;
+			curr_direction = 0;
+			stop();
+			queue1.erase(queue1.begin());
+		}
+
+	}*/
+	Call p;
+
+	if (queue.empty())
+	{
+		p.floor = 1;
+		queue.push_back(p);
+		moving();
+	}
+	else
+	{
+		if (i_current_floor < queue[0].floor)
+			curr_direction = 1;
+		else if (i_current_floor > queue[0].floor)
+			curr_direction = -1;
+
+		if (queue[0].floor != i_current_floor)
+		{
+			i_current_floor += curr_direction;
+		}
+
+		else
+		{
+			past_direction = curr_direction;
+			curr_direction = 0;
 			stop();
 			queue.erase(queue.begin());
 		}
@@ -168,7 +302,7 @@ int cl_manage::get_num_passengers()
 
 int cl_manage::get_direction()
 {
-	return direction;
+	return curr_direction;
 }
 
 int cl_manage::get_current_floor()

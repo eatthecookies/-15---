@@ -5,11 +5,9 @@ cl_output::cl_output(cl_base* p_head_object, string s_name) : cl_base(p_head_obj
 	set_object_class(2);
 }
 
-void cl_output::signal_meth(string& s_message)
-{
-	
-}
+// метод обработчик
 
-void cl_output::button_on_the_floor_has_been_pushed(string s_message)
+void cl_output::console_output(string s_message)
 {
+	cout << endl << s_message;
 }

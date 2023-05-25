@@ -9,7 +9,7 @@ using namespace std;
 
 class cl_base;
 
-#define SIGNAL_D(signal_meth) (TYPE_SIGNAL)(&signal_meth) 		// макроопределение для приведения указателя на метод сигнала 
+#define SIGNAL_D(signal) (TYPE_SIGNAL)(&signal) 		// макроопределение для приведения указателя на метод сигнала 
 #define HANDLER_D(button_on_the_floor_has_been_pushed) (TYPE_HANDLER)(&button_on_the_floor_has_been_pushed)	// макроопределение для приведения указателя на метод обработчика
 
 typedef void (cl_base::* TYPE_SIGNAL) (string& s_message);
@@ -38,7 +38,7 @@ public:
 	cl_base* get_head();												// метод получения указателя на головной объект	
 	cl_base* get_sub_object(string s_name);							 	// метод получения указателя на подчиненный объект по имени
 
-	int count(string s_name); 							// метод, который подсчитывает количество вхождений объектов с данным именем от текущего.
+	int count_obj(string s_name); 							// метод, который подсчитывает количество вхождений объектов с данным именем от текущего.
 	cl_base* search_object(string s_name);				// метод поиска объекта на дереве иерархии по имени (вернет первый совпавший по имени)
 	cl_base* find_object_from_current(string s_name);	// метод поиска объекта по имени на ветке дерева иерархии от текущего 
 	cl_base* find_object_from_root(string s_name);		// метод поиска объекта по имени на всем дереве иерархии от корня 

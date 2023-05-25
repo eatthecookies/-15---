@@ -14,19 +14,15 @@ class cl_passenger : public cl_base
 	//							  3 - в лифте наверх
 	//							  4 - в лифте вниз1
 
-	int i_current_floor;
-
 	int i_pushed_button;
 	int i_tact;
 public:
 	cl_passenger(cl_base* p_head_object, string s_name = "passenger"); // параметризованный конструктор класса cl_2
 
-	int get_current_floor();
 	int get_destination_floor();
 	void set_dest_floor(int);
 	void set_init_floor(int);
 
-	void signal_meth(string& s_message); 			// метод подачи сигнала
 	void button_on_the_floor_has_been_pushed(string s_message); 			// метод обработчика
 };
 

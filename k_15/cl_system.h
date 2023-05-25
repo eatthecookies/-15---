@@ -21,8 +21,10 @@ public:
 	void signal_to_read_command(string& s_message); 			// метод подачи сигнала
 	void signal_to_сhange_cab_capacity(string& s_message);
 	void signal_to_push_the_button_in_cab(string& s_message);
-	void handler(string s_message); 			// метод обработчика
 	void signal_to_push_button_on_the_floor(string& s_message);
+	void signal_to_output(string& s_message);
+
+	void handler(string s_message); 			// метод обработчика
 	void load_passengers(string s_message);
 	void unload_passengers(string s_message);
 };

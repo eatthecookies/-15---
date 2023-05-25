@@ -12,12 +12,17 @@ cl_base::cl_base(cl_base* p_head_object, string s_name)
 
 cl_base::~cl_base()
 {
-	//get_root()-> delete_links(this);
+	// нахождение указателя на корневой объект
+	cl_base* p_root_object = this;
+	while (p_root_object->p_head_object != nullptr)				// пока головной объект не станет нулевым указателем
+		p_root_object = p_root_object->get_head();				// восхождение вверх по дереву
+	
+	p_root_object-> delete_links(this);
 	for (int i = 0; i < p_sub_objects.size(); i++) 		// поочередное удаление подчиненных объектов
 		delete p_sub_objects[i];
 }
 
-// добавлено на факультативе 
+
 void cl_base::delete_links(cl_base*p_target)
 {
 	//Метод удаляет связи, идущие к объекту p_target, из всех друших элементов дерева
@@ -29,11 +34,8 @@ void cl_base::delete_links(cl_base*p_target)
 			this->connections.erase(connections.begin() + i);
 		}
 	}
-
 	for (auto p_sub : p_sub_objects)
-	{
 		p_sub->delete_links(p_target);
-	}
 }
 
 vector<cl_base*> cl_base::get_sub_objects()
@@ -70,7 +72,7 @@ bool cl_base::set_name(string s_new_name)
 };
 
 
-int cl_base::count(string s_name) 			// подсчитывает количество вхождений объектов 
+int cl_base::count_obj(string s_name) 			// подсчитывает количество вхождений объектов 
 {											//с определенным именем на ветке подчиненных объектов от текущего
 	int c = 0;
 
@@ -78,7 +80,7 @@ int cl_base::count(string s_name) 			// подсчитывает количество вхождений объект
 		c++;
 
 	for (auto p_sub_object : p_sub_objects) // цикл по подчиненным объектам текущего объекта
-		c += p_sub_object->count(s_name);	// рекурсивный вызов
+		c += p_sub_object->count_obj(s_name);	// рекурсивный вызов
 	return c;
 }
 
@@ -97,7 +99,7 @@ cl_base* cl_base::search_object(string s_name) 					// вернёт первый попавшийся 
 
 cl_base* cl_base::find_object_from_current(string s_name) // найти указатель на объект среди подчиненных от текущего
 {
-	if (this->count(s_name) != 1)						  // если количество подчиненных превышает 1 (имя не уникально)
+	if (this->count_obj(s_name) != 1)						  // если количество подчиненных превышает 1 (имя не уникально)
 		return nullptr;
 	return search_object(s_name);
 }
@@ -113,35 +115,27 @@ cl_base* cl_base::find_object_from_root(string s_name) // найти указатель на объ
 void cl_base::print_tree(int spaces)
 {
 	cout << endl;									// переход на новую строку
-
 	for (int i = 0; i < spaces; i++) cout << " "; 	// печать пробелов
-
 	cout << get_name();								// вывод имени текущего объекта
-
 	for (auto p_sub_object : p_sub_objects) 		// цикл по подчиненным объектам
-		p_sub_object->print_tree(spaces + 4);	// рекурсивный вызов с переходом на новую ветвь дерева
+		p_sub_object->print_tree(spaces + 4);		// рекурсивный вызов с переходом на новую ветвь дерева
 }
 
 void cl_base::print_tree_with_rns(int spaces)
 {
 	cout << endl;											// переход на новую строку
-
 	for (int i = 0; i < spaces; i++) cout << " "; 			// печать пробелов
-
 	cout << get_name();										// вывод имени текущего объекта
-
 	if (i_state != 0) 										// вывод состояния
 		cout << " is ready";
 	else
 		cout << " is not ready";
-
 	for (auto p_sub_object : p_sub_objects) 				// цикл по подчиненным объектам
 		p_sub_object->print_tree_with_rns(spaces + 4);	// рекурсивный вызов с переходом на новую ветвь дерева
 }
 
 void cl_base::set_state(int i_state) 					// задание состояния готовности
 {
-
 	if (i_state == 0) 									// отключаем все объекты вниз по ветке
 	{
 		this->i_state = i_state;
@@ -152,7 +146,6 @@ void cl_base::set_state(int i_state) 					// задание состояния готовности
 	{
 		if (get_head() == nullptr || based_is_stated() == true) // если текущий объект корневой, либо все объекты выше по ветке включены
 			this->i_state = i_state;
-
 	}
 }
 
@@ -174,7 +167,6 @@ bool cl_base::change_head_object(cl_base* p_new_head_object)
 		return false;
 	}
 
-
 	cl_base* p_root_object = p_new_head_object;
 	while (p_root_object->p_head_object != nullptr)			// идеи вверх до корня от нового головного объекта
 	{
@@ -183,12 +175,9 @@ bool cl_base::change_head_object(cl_base* p_new_head_object)
 		p_root_object = p_root_object->get_head();
 	}
 
-	
-
 	int i = 0;
 	while (p_head_object->p_sub_objects[i]->s_name != this->s_name) i++;
 	p_head_object->p_sub_objects.erase(p_head_object->p_sub_objects.begin() + i);
-
 
 	this->p_head_object = p_new_head_object;
 	p_new_head_object->p_sub_objects.push_back(this); // добавление текущего объекта в список указателей на подчиненные объекты нового головного объекта

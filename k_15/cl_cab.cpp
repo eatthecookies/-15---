@@ -5,22 +5,22 @@ cl_cab::cl_cab(cl_base* p_head_object, string s_name) : cl_base(p_head_object, s
 	set_object_class(2);
 }
 
-void cl_cab::signal_meth(string& s_message)
-{
-}
-
 int cl_cab::get_capacity()
 {
 	return i_capacity;
 }
 
-void cl_cab::signal_to_push_the_button_in_cab(string& s_message)
-{
-
-}
+// метод обработчик
 
 void cl_cab::change_capacity(string s_message)
 {
 	i_capacity = stoi(s_message);
 }
+
+// метод сигнала
+
+void cl_cab::signal_to_push_the_button_in_cab(string& s_message)
+{
+}
+
 

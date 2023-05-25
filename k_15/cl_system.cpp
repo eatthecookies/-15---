@@ -246,9 +246,9 @@ int cl_system::exec_app()
 		}
 
 		cout << " (";
-		for (auto p : p_manage->queue)
+		for (auto p : p_manage->queue1)
 		{
-			cout << p.floor << "  ";
+			cout << p << "  ";
 		}
 		cout << ")" ;
 

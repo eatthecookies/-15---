@@ -5,6 +5,8 @@ cl_passenger::cl_passenger(cl_base* p_head_object, string s_name) : cl_base(p_he
 	set_object_class(2);
 }
 
+// todo переделать на сигнал и обработчик!
+
 int cl_passenger::get_destination_floor()
 {
 	return i_destination_floor;

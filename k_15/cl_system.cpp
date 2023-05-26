@@ -171,6 +171,7 @@ int cl_system::exec_app()
 			emit_signal(SIGNAL_D(cl_system::signal_to_set_init_dest_floor), command);		// выдача сигнала для установки начального и целового этажа
 
 			command = to_string(i_initial_floor) + " " + to_string(pass_obj->get_state());	// формирование сигнала для нажатия кнопеи на этаже (на каком этаже сейчас и направление)
+			
 			// todo переделать на сигнал и обработчик!
 			p_floor->emit_signal(SIGNAL_D(cl_floor::signal_to_call_elevator), command);		// нажатие кнопки на этаже
 			

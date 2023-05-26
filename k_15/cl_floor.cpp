@@ -23,12 +23,5 @@ void cl_floor::button_on_the_floor_has_been_pushed(string s_message)
 
 void cl_floor::button_has_pushed_on_the_floor(string s_message)
 {
-	int curr_direction, i_init_floor;
-	cl_base* p_manage = get_object_pointer("/manage");
-
-	stringstream ss(s_message);
-	ss >> i_init_floor >> curr_direction;
-	string command;
-
-	emit_signal(SIGNAL_D(cl_floor::signal_to_call_elevator), s_message);
+	emit_signal(SIGNAL_D(cl_floor::signal_to_call_elevator), s_message);	// выдача сигнала блоку управления лифта для уведомления о вызове на этаже
 }

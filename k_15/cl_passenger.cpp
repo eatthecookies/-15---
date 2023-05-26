@@ -10,14 +10,13 @@ int cl_passenger::get_destination_floor()
 	return i_destination_floor;
 }
 
-void cl_passenger::set_init_floor(int floor)
-{
-	i_initial_floor = floor;
-}
+// todo переделать на сигналы и обработчики
 
-void cl_passenger::set_dest_floor(int floor)
+void cl_passenger::set_init_and_dest_floors(string s_message)
 {
-	i_destination_floor = floor;
+	stringstream ss(s_message);
+	ss >> i_initial_floor >> i_destination_floor;
+	cout << get_name() << " " << s_message;
 }
 
 // метод обработчика

@@ -18,13 +18,30 @@ public:
 	int exec_app();						// метод запуска основного алгоритма приложения  		
 	void build_tree_objects();			// метод построения дерева объектов 
 
-	void signal_to_read_command(string& s_message); 			// метод подачи сигнала
+	// методы сигнала
+	void signal_to_read_command(string& s_message); 			
 	void signal_to_сhange_cab_capacity(string& s_message);
 	void signal_to_push_the_button_in_cab(string& s_message);
 	void signal_to_push_button_on_the_floor(string& s_message);
 	void signal_to_output(string& s_message);
+	void signal_to_set_init_dest_floor(string& s_message);
 
-	void handler(string s_message); 			// метод обработчика
+	void signal_for_elevator_movement(string& s_message);
+
+	void signal_to_increment_num_passengers(string& s_message);
+
+	void signal_to_decrement_num_passengers(string& s_message);
+
+	void signal_to_get_current_floor(string& s_message);
+
+	void signal_to_get_num_passengers(string& s_message);
+
+	void signal_to_get_direction(string& s_message);
+
+	void signal_to_get_capacity(string& s_message);
+
+	// методы обработчики
+	void handler(string s_message); 			
 	void load_passengers(string s_message);
 	void unload_passengers(string s_message);
 };

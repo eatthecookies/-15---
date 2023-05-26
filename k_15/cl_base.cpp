@@ -355,7 +355,7 @@ void cl_base::set_object_class(int n)
 
 void cl_base::set_all_state_on()
 {
-	this->i_state = 1;
+	i_state = 1;
 	for (auto p_sub_object : this->p_sub_objects)	// цикл по подчиненным объектам
 	{
 		p_sub_object->i_state = 1;				// установка состояния

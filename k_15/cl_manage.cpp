@@ -1,8 +1,7 @@
 #include "cl_manage.h"
 
-cl_manage::cl_manage(cl_base* p_head_object, string s_name) : cl_base(p_head_object, s_name) // конструктор класса cl_2 вызывает конструктор базового класса
+cl_manage::cl_manage(cl_base* p_head_object, string s_name) : cl_base(p_head_object, s_name) 
 {
-	
 }
 
 // методы обработчики
@@ -61,16 +60,17 @@ void cl_manage::button_on_the_floor_has_been_pushed(string s_message)
 	
  	for (int i = pointer; i < queue.size() ; i++)
 	{
-		if (curr_direction == pass_direction && curr_direction == 1) // играет вверх
+		if (curr_direction == pass_direction && curr_direction == 1 && i_init_floor > i_current_floor) // играет вверх
 		{
+			cout << i_init_floor << i_current_floor;
 			if (queue[i - 1] < i_init_floor < queue[i])
 			{
 				if (count(queue.begin() + pointer, queue.end(), i_init_floor) == 0)
 					queue.insert(queue.begin() + i, i_init_floor);
 				return;
-			}
+			} 
 		}
-		else if (curr_direction == pass_direction && curr_direction == -1)
+		else if (curr_direction == pass_direction && curr_direction == -1 && i_init_floor < i_current_floor)
 		{
 			if (queue[i - 1] > i_init_floor > queue[i])
 			{
@@ -91,12 +91,12 @@ void cl_manage::button_on_the_floor_has_been_pushed_again(string s_message)
 		queue.push_back(stoi(s_message));
 }
 
-void cl_manage::moving()
+void cl_manage::elevator_movement(string s_message)
 {
 	if (queue.empty() or pointer > queue.size() - 1)
 	{
 		queue.push_back(1);
-		moving();
+		elevator_movement(s_message);
 	}
 	else
 	{
@@ -114,51 +114,48 @@ void cl_manage::moving()
 		if (queue[pointer] != i_current_floor)
 			i_current_floor += curr_direction;
 		else
-		{
+		{ 
 			set_state(3);
 			pointer++;
-			stop();	
+			cl_base* p_floor = get_object_pointer("/floor_" + to_string(i_current_floor));
+			cl_base* p_cab = get_object_pointer("/manage/cabin");
+			string command = "";
+
+			if (!p_cab->get_sub_objects().empty())	 // если в кабине есть пассажиры
+				emit_signal(SIGNAL_D(cl_manage::signal_to_unload_passengers), command);
+
+			if (!p_floor->get_sub_objects().empty()) // если на этаже есть пассажиры
+				emit_signal(SIGNAL_D(cl_manage::signal_to_load_passengers), command);
 		}
 	}
 }
 
-void cl_manage::stop()
-{
-	cl_base* p_floor = get_object_pointer("/floor_" + to_string(i_current_floor));
-	cl_base* p_cab = get_object_pointer("/manage/cabin");
-	string command = "";
-	
-	if (!p_cab->get_sub_objects().empty())	 // если в кабине есть пассажиры
-		emit_signal(SIGNAL_D(cl_manage::signal_to_unload_passengers), command);
-
-	if (!p_floor->get_sub_objects().empty()) // если на этаже есть пассажиры
-		emit_signal(SIGNAL_D(cl_manage::signal_to_load_passengers), command);
-}
-
-
-void cl_manage::decrement_num_passengers()
+void cl_manage::decrement_num_passengers(string s_message)
 {
 	i_number_of_passengers--;
 }
 
-void cl_manage::increment_num_passengers()
+void cl_manage::increment_num_passengers(string s_message)
 {
 	i_number_of_passengers++;
 }
 
-int cl_manage::get_current_floor()
+void cl_manage::get_current_floor(string s_message)
 {
-	return i_current_floor;
+	string command = to_string(i_current_floor);
+	emit_signal(SIGNAL_D(cl_manage::signal_to_system_handler), command);
 }
 
-int cl_manage::get_num_passengers()
+void cl_manage::get_num_passengers(string s_message)
 {
-	return i_number_of_passengers;
+	string command = to_string(i_number_of_passengers);
+	emit_signal(SIGNAL_D(cl_manage::signal_to_system_handler), command);
 }
 
-int cl_manage::get_direction()
+void cl_manage::get_direction(string s_message)
 {
-	return curr_direction;
+	string command = to_string(curr_direction);
+	emit_signal(SIGNAL_D(cl_manage::signal_to_system_handler), command);
 }
 
 
@@ -168,5 +165,9 @@ void cl_manage::signal_to_load_passengers(string& s_message)
 {
 }
 void cl_manage::signal_to_unload_passengers(string& s_message)
+{
+}
+
+void cl_manage::signal_to_system_handler(string& s_message)
 {
 }

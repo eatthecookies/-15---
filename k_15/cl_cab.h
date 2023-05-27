@@ -15,6 +15,7 @@ public:
 	void signal_to_system_handler(string& s_message);
 	void change_capacity(string s_message);						// обработчик сигнала для изменения вместимости лифта
 	void get_capacity(string s_message);
+	void button_has_been_pushed(string s_message);
 };
 
 #endif

@@ -93,6 +93,9 @@ void cl_system::build_tree_objects()
 	
 	// установить связь система -> объект управления кабиной лифта для получения вместимости
 	set_connection(SIGNAL_D(cl_system::signal_to_get_capacity), ob_cabin, HANDLER_D(cl_cab::get_capacity));
+	
+	set_connection(SIGNAL_D(cl_system::signal_to_cab_to_push_the_button_in_cab), ob_cabin, HANDLER_D(cl_cab::button_has_been_pushed));
+	
 
 	command = "Ready to work";
 	
@@ -289,6 +292,7 @@ void cl_system::load_passengers(string s_message)
 
 	emit_signal(SIGNAL_D(cl_system::signal_to_get_num_passengers), command);
 	int num_passengers = stoi(current_command);
+	cout << num_passengers << endl;
 	
 	cl_base* p_floor = get_object_pointer("/floor_" + curr_floor);
 	cl_cab* p_cab = (cl_cab*) get_object_pointer("/manage/cabin");
@@ -297,7 +301,7 @@ void cl_system::load_passengers(string s_message)
 
 	for (int i = 0; i < n; i++)
 	{
-		cl_passenger* p_pass = (cl_passenger*)p_floor->get_sub_objects()[0];
+		cl_passenger* p_pass = (cl_passenger*)p_floor->get_sub_objects()[i];
 		
 		if (num_passengers == capacity)
 		{
@@ -307,14 +311,23 @@ void cl_system::load_passengers(string s_message)
 		}
 		else
 		{
-			command = to_string(p_pass->get_destination_floor()) + " " + to_string(p_pass->get_state());
+			set_connection(SIGNAL_D(cl_system::signal_to_get_destination_floor), p_pass, HANDLER_D(cl_passenger::get_destination_floor));
+			p_pass->set_connection(SIGNAL_D(cl_passenger::signal_to_system_handler), this, HANDLER_D(cl_system::handler));
+			
+			emit_signal(SIGNAL_D(cl_system::signal_to_get_destination_floor), command);
+			cout << current_command << endl;
+			command = current_command + " " + to_string(p_pass->get_state());
 			p_pass->change_head_object(p_cab);
 
 			emit_signal(SIGNAL_D(cl_system::signal_to_increment_num_passengers), command);
 
 			// todo переделать на сигнал и обработчик!
 			// нажать кнопку в лифте
-			p_cab->emit_signal(SIGNAL_D(cl_cab::signal_to_push_the_button_in_cab), command);
+			//p_cab->emit_signal(SIGNAL_D(cl_cab::signal_to_push_the_button_in_cab), command);
+			emit_signal(SIGNAL_D(cl_system::signal_to_cab_to_push_the_button_in_cab), command);
+
+			//p_pass->delete_connection(SIGNAL_D(cl_passenger::signal_to_system_handler), this, HANDLER_D(cl_system::handler));
+			//delete_connection(SIGNAL_D(cl_system::signal_to_get_destination_floor), p_pass, HANDLER_D(cl_passenger::get_destination_floor));
 		}	
 	}
 }
@@ -329,13 +342,20 @@ void cl_system::unload_passengers(string s_message)
 	cl_base* p_floor = get_object_pointer("/floor_" + current_command);
 	cl_base* p_cab = get_object_pointer("/manage/cabin");
 	
+	int current_floor = stoi(current_command);
+	
+
 	int n = p_cab->get_sub_objects().size();
 	int j = 0;
 	for (int i = 0; i < n; i++)
 	{
 		cl_passenger* p_pass = (cl_passenger*)p_cab->get_sub_objects()[j];
 		
-		if (p_pass->get_destination_floor() == stoi(current_command))
+		set_connection(SIGNAL_D(cl_system::signal_to_get_destination_floor), p_pass, HANDLER_D(cl_passenger::get_destination_floor));
+		int dest_floor = stoi(current_command);
+		delete_connection(SIGNAL_D(cl_system::signal_to_get_destination_floor), p_pass, HANDLER_D(cl_passenger::get_destination_floor));
+		
+		if (dest_floor == current_floor)
 		{
 			p_cab->delete_sub_object(p_pass->get_name());
 			emit_signal(SIGNAL_D(cl_system::signal_to_decrement_num_passengers), command);
@@ -402,3 +422,12 @@ void cl_system::signal_to_get_direction(string& s_message)
 void cl_system::signal_to_get_capacity(string& s_message)
 {
 }
+
+void cl_system::signal_to_get_destination_floor(string& s_message)
+{
+}
+
+void cl_system::signal_to_cab_to_push_the_button_in_cab(string& s_message)
+{
+}
+

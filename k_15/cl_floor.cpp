@@ -2,7 +2,6 @@
 
 cl_floor::cl_floor(cl_base* p_head_object, string s_name) : cl_base(p_head_object, s_name) // конструктор класса cl_2 вызывает конструктор базового класса
 {
-	set_object_class(3);
 }
 
 // методы сигнала

@@ -19,10 +19,11 @@ class cl_passenger : public cl_base
 public:
 	cl_passenger(cl_base* p_head_object, string s_name = "passenger"); // параметризованный конструктор класса cl_2
 
-	int get_destination_floor();
+	void get_destination_floor(string s_message);
 	void set_init_and_dest_floors(string s_message);
 	
 	void button_on_the_floor_has_been_pushed(string s_message); 			// метод обработчика
+	void signal_to_system_handler(string& s_message);
 };
 
 #endif

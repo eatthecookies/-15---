@@ -40,6 +40,10 @@ public:
 
 	void signal_to_get_capacity(string& s_message);
 
+	void signal_to_get_destination_floor(string& s_message);
+
+	void signal_to_cab_to_push_the_button_in_cab(string& s_message);
+
 	// методы обработчики
 	void handler(string s_message); 			
 	void load_passengers(string s_message);
